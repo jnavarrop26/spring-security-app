@@ -42,25 +42,59 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-
+        /**
+         * Obtiene el token JWT del encabezado de autorización de la solicitud HTTP.
+         */
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-
+        
+        /**
+         * Si el  token no es nulo, entonces procede a validar y usar el token
+         */
         if (jwtToken != null) {
+
+            /**
+             * Eliminia los primero 7 caracteres del token JWT. Esto se hace generalmente para elminiar el prefijo
+             * "Bearer" que emilio el token JWT. en el encabezado de autorización.
+             */
             jwtToken = jwtToken.substring(7);
 
+            /**
+             * Extrae el nombre de ususaio y los roles del token JWT decodificado
+             */
             DecodedJWT decodedJWT = jwtUtils.validateToken(jwtToken);
-
+            
+            /**
+             * Extrae el nombre de usuario del token JWT decodificado y lo almacena en la variable "username".
+             */
             String username = jwtUtils.extractUsername(decodedJWT);
             String stringAuthorities = jwtUtils.getSpecificClaim(decodedJWT, "authorities").asString();
 
+            /**
+             * Convierte la lista de autoridades de una cadena separada por comas a una coleccion de Objetos GrantedAuthority.
+             */
             Collection<? extends GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(stringAuthorities);
 
+            /**
+             * Crea un nuevo contexto de seguridad vacio
+             */
             SecurityContext context = SecurityContextHolder.createEmptyContext();
+            /**
+             * Crea un nuevo objeto de autenticacion con el onmbre de usuaruio y las autoridades extraidas del token JWT
+             */
             Authentication authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            /**
+             * Establece el contecto de seguridad en el SecurityContextHolder, 
+             * que es una clase que almacena los detalles de la autenticacion.
+             */
             context.setAuthentication(authenticationToken);
             SecurityContextHolder.setContext(context);
 
         }
+        /**
+         * Continua con la cadena de filtros.
+         * Esto permite que la solicitus continue a traves de otros filtros
+         * de seguridad y finalmente llegue al controlador.
+         */
         filterChain.doFilter(request, response);
     }
 }

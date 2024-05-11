@@ -92,6 +92,7 @@ public class SecurityConfig {
      * Esto significa que la configuración de autenticación específica utilizada en la aplicación se puede inyectar en este método, 
      * y este método simplemente devolverá el AuthenticationManager asociado con esa configuración
      */
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
