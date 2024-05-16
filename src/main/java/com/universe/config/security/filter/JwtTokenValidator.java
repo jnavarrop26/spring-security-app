@@ -30,6 +30,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     public JwtTokenValidator(JwtUtils jwtUtils) {
+
         this.jwtUtils = jwtUtils;
     }
 
@@ -46,7 +47,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
          * Obtiene el token JWT del encabezado de autorización de la solicitud HTTP.
          */
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        
+
         /**
          * Si el  token no es nulo, entonces procede a validar y usar el token
          */
@@ -62,7 +63,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
              * Extrae el nombre de ususaio y los roles del token JWT decodificado
              */
             DecodedJWT decodedJWT = jwtUtils.validateToken(jwtToken);
-            
+
             /**
              * Extrae el nombre de usuario del token JWT decodificado y lo almacena en la variable "username".
              */
@@ -83,7 +84,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
              */
             Authentication authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
             /**
-             * Establece el contecto de seguridad en el SecurityContextHolder, 
+             * Establece el contecto de seguridad en el SecurityContextHolder,
              * que es una clase que almacena los detalles de la autenticacion.
              */
             context.setAuthentication(authenticationToken);

@@ -2,7 +2,6 @@ package com.universe.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
